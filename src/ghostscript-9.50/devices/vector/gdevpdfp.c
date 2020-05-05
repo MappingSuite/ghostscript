@@ -127,6 +127,11 @@ static const gs_param_item_t pdf_param_items[] = {
     pi("FastWebView", gs_param_type_bool, Linearise),
     pi("NoOutputFonts", gs_param_type_bool, FlattenFonts),
     pi("WantsPageLabels", gs_param_type_bool, WantsPageLabels),
+
+    /* Custom MAPPING Parameters */
+    pi("FontsWhiteListFile", gs_param_type_string, FontsWhiteListFile),
+    pi("IgnoreLisencingRestrictions", gs_param_type_bool, IgnoreLisencingRestrictions),
+
 #undef pi
     gs_param_item_end
 };

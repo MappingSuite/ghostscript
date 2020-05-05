@@ -150,6 +150,8 @@ const gx_device_pdf PDF_DEVICE_IDENT =
  0,				/* EncryptionR */
  {0, 0, 0},			/* NoEncrypt */
  true,				/* EncryptMetadata */
+ { 0, 0, 0 },				/* FontsWhiteListFile */
+ false,       /*IgnoreLisencingRestrictions*/
  true,                          /* ComputeDocumentDigest */
  {0},				/* EncryptionO */
  {0},				/* EncryptionU */

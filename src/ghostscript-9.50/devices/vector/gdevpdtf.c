@@ -783,6 +783,68 @@ has_extension_glyphs(gs_font *pfont)
     return false;
 }
 
+bool 
+IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
+{
+    if (pdev->nFontsWhiteList == 0 && pdev->FontsWhiteListFile.size > 0 && pdev->FontsWhiteListFile.size < 256)
+    {
+        char buf[256];
+        memcpy(buf, pdev->FontsWhiteListFile.data, pdev->FontsWhiteListFile.size);
+        buf[pdev->FontsWhiteListFile.size] = 0;
+
+        stream* file = sfopen(buf, "r", pdev->pdf_memory);
+        char data[256];
+        int i = 0;
+        pdev->nFontsWhiteList = 0;
+        int c = 0;
+        while (c != -1)
+        {
+            c = sfgetc(file);
+
+            if (c == 0x0A || c == 0x0D || c == -1)
+            {
+                if (i > 0)
+                {
+                    data[i] = 0;
+
+                    byte* string = gs_alloc_string(pdev->pdf_memory, i, "add_whitelist");
+
+                    if (string == 0)
+                        return_error(gs_error_VMerror);
+
+                    memcpy(string, data, i + 1);
+
+                    pdev->FontsWhiteList[pdev->nFontsWhiteList] = string;
+                    pdev->nFontsWhiteList++;
+
+                    i = 0;
+
+                    if (pdev->nFontsWhiteList >= 256)
+                        break;
+                }
+            }
+            else
+            {
+                data[i++] = (char)c;
+            }
+        }
+
+    }
+    
+    for (int i = 0; i < pdev->nFontsWhiteList; i++)
+    {
+        int s = strlen(pdev->FontsWhiteList[i]);
+
+        if (s == size)
+        {
+            if (memcmp(chars, pdev->FontsWhiteList[i], size) == 0)
+                return true;
+        }
+    }
+
+    return false;
+}
+
 pdf_font_embed_t
 pdf_font_embed_status(gx_device_pdf *pdev, gs_font *font, int *pindex,
                       pdf_char_glyph_pair_t *pairs, int num_glyphs)
@@ -800,7 +862,8 @@ pdf_font_embed_status(gx_device_pdf *pdev, gs_font *font, int *pindex,
     code = font->procs.font_info(font, NULL, FONT_INFO_EMBEDDING_RIGHTS, &info);
     if (code == 0 && (info.members & FONT_INFO_EMBEDDING_RIGHTS)) {
         if (((info.EmbeddingRights == 0x0002) || (info.EmbeddingRights & 0x0200))
-            && !IsInWhiteList ((const char *)chars, size)) {
+            && !IsInWhiteList ((const char *)chars, size) && !pdev->IgnoreLisencingRestrictions
+            && !IsInCustomWhiteList(pdev, (const char *)chars, size)) {
             /* See the OpenType specification, "The 'OS/2' and Windows Metrics Table" for details
                of the fstype parameter. This is a bitfield, currently we forbid embedding of fonts
                with these bits set:
