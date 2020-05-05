@@ -789,14 +789,17 @@ IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
     if (pdev->nFontsWhiteList == 0 && pdev->FontsWhiteListFile.size > 0 && pdev->FontsWhiteListFile.size < 256)
     {
         char buf[256];
+		char data[256];
+        int i = 0;        
+        int c = 0;
+		stream* file;
+		
         memcpy(buf, pdev->FontsWhiteListFile.data, pdev->FontsWhiteListFile.size);
         buf[pdev->FontsWhiteListFile.size] = 0;
 
-        stream* file = sfopen(buf, "r", pdev->pdf_memory);
-        char data[256];
-        int i = 0;
-        pdev->nFontsWhiteList = 0;
-        int c = 0;
+        file = sfopen(buf, "r", pdev->pdf_memory);
+        		
+		pdev->nFontsWhiteList = 0;
         while (c != -1)
         {
             c = sfgetc(file);
@@ -805,9 +808,10 @@ IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
             {
                 if (i > 0)
                 {
+					byte* string;
                     data[i] = 0;
 
-                    byte* string = gs_alloc_string(pdev->pdf_memory, i, "add_whitelist");
+                    string = gs_alloc_string(pdev->pdf_memory, i, "add_whitelist");
 
                     if (string == 0)
                         return_error(gs_error_VMerror);
@@ -833,7 +837,7 @@ IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
     
     for (int i = 0; i < pdev->nFontsWhiteList; i++)
     {
-        int s = strlen(pdev->FontsWhiteList[i]);
+        int s = strlen((char*)pdev->FontsWhiteList[i]);
 
         if (s == size)
         {

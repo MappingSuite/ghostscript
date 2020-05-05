@@ -17,7 +17,7 @@ agent { label 'AS400_DEV_1' }
 				echo "#                                  BUILD GS                                                   #"
 				echo "###############################################################################################"
 				
-				sh 'cd $WORKSPACE/src/ghostscript-9.52 && ./configure && make'
+				sh 'cd $WORKSPACE/src/ghostscript-9.50 && ./configure && gmake'
 				
 				}
         }	
@@ -29,7 +29,12 @@ agent { label 'AS400_DEV_1' }
 				echo "#                                          DEPLOY                                             #"
 				echo "###############################################################################################"
 
-				
+				script {
+					def version = readFile("${WORKSPACE}//version.txt").trim()
+					sh "cd $WORKSPACE/src/ghostscript-9.50/bin && zip gs.zip gs"
+					
+					sh "curl -ujenkins:Mapping1234\$ -T \"${WORKSPACE}/src/ghostscript-9.50/bin/gs.zip\" \"http://${artifactoryip}/artifactory/Opale/Dependencies/IBMi/mapping-ghostscript-pase-${version}.zip\""
+				}
 			}
 		}		
 	}
