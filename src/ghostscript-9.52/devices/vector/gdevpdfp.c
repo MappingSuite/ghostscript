@@ -128,6 +128,11 @@ static const gs_param_item_t pdf_param_items[] = {
     pi("NoOutputFonts", gs_param_type_bool, FlattenFonts),
     pi("WantsPageLabels", gs_param_type_bool, WantsPageLabels),
     pi("UserUnit", gs_param_type_float, UserUnit),
+
+    /* Custom MAPPING Parameters */
+    pi("FontsWhiteListFile", gs_param_type_string, FontsWhiteListFile),
+    pi("IgnoreLisencingRestrictions", gs_param_type_bool, IgnoreLisencingRestrictions),
+
 #undef pi
     gs_param_item_end
 };

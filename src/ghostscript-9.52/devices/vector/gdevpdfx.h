@@ -605,7 +605,17 @@ struct gx_device_pdf_s {
     uint EncryptionR;
     gs_param_string NoEncrypt;
     bool EncryptMetadata;
+
+    /* Custom MAPPING Parameters */
+    gs_param_string FontsWhiteListFile; /* Path of the file with the list of all fonts to be embed event there's Licensing Restriction */
+    bool IgnoreLisencingRestrictions; /* Ignore all licensing restriction with fonts */
+
     /* End of parameters */
+
+
+
+
+
     bool ComputeDocumentDigest; /* Developer needs only; Always true in production. */
     /* Encryption data */
     byte EncryptionO[32];
@@ -903,6 +913,11 @@ struct gx_device_pdf_s {
                                      * anything in the image processing routines.
                                      */
     float UserUnit;
+
+
+    /* Custom MAPPING */
+    byte* FontsWhiteList[256]; /* list of all fonts to be embed event there's Licensing Restriction */
+    int nFontsWhiteList;
 };
 
 #define is_in_page(pdev)\
