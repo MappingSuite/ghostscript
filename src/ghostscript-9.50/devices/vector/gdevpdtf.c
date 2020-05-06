@@ -786,6 +786,8 @@ has_extension_glyphs(gs_font *pfont)
 bool 
 IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
 {
+    int p = 0;
+    
     if (pdev->nFontsWhiteList == 0 && pdev->FontsWhiteListFile.size > 0 && pdev->FontsWhiteListFile.size < 256)
     {
         char buf[256];
@@ -835,10 +837,24 @@ IsInCustomWhiteList(gx_device_pdf *pdev, const char * chars, int size)
 
     }
     
+    for (int k = 0; k < size; k++)
+    {
+        if (chars[k] == '+')
+        {
+            p = k + 1;
+            break;
+        }
+    }
+
     for (int i = 0; i < pdev->nFontsWhiteList; i++)
     {
         int s = strlen((char*)pdev->FontsWhiteList[i]);
-
+       
+        if (s == (size - p))
+        {
+            if (memcmp(chars + p, pdev->FontsWhiteList[i], size - p) == 0)
+                return true;
+        }
         if (s == size)
         {
             if (memcmp(chars, pdev->FontsWhiteList[i], size) == 0)
