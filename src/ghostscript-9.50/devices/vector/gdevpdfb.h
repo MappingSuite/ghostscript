@@ -152,6 +152,7 @@ const gx_device_pdf PDF_DEVICE_IDENT =
  true,				/* EncryptMetadata */
  { 0, 0, 0 },				/* FontsWhiteListFile */
  false,       /*IgnoreLisencingRestrictions*/
+ false,       /*AllowFontsSubstitution*/
  true,                          /* ComputeDocumentDigest */
  {0},				/* EncryptionO */
  {0},				/* EncryptionU */

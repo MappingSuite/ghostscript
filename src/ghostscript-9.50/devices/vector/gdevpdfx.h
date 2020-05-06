@@ -607,6 +607,7 @@ struct gx_device_pdf_s {
     /* Custom MAPPING Parameters */
     gs_param_string FontsWhiteListFile; /* Path of the file with the list of all fonts to be embed event there's Licensing Restriction */
     bool IgnoreLisencingRestrictions; /* Ignore all licensing restriction with fonts */
+    bool AllowFontsSubstitution;
 
     /* End of parameters */
 

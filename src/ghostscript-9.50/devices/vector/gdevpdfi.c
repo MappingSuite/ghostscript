@@ -2644,7 +2644,7 @@ gdev_pdf_dev_spec_op(gx_device *pdev1, int dev_spec_op, void *data, int size)
         case gxdso_event_info:
             {
                 dev_param_req_t *request = (dev_param_req_t *)data;
-                if (memcmp(request->Param, "SubstitutedFont", 15) == 0 && pdev->PDFA) {
+                if (memcmp(request->Param, "SubstitutedFont", 15) == 0 && pdev->PDFA && !pdev->AllowFontsSubstitution) {
                     switch (pdev->PDFACompatibilityPolicy) {
                         case 0:
                         case 1:

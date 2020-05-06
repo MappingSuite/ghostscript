@@ -131,6 +131,7 @@ static const gs_param_item_t pdf_param_items[] = {
     /* Custom MAPPING Parameters */
     pi("FontsWhiteListFile", gs_param_type_string, FontsWhiteListFile),
     pi("IgnoreLisencingRestrictions", gs_param_type_bool, IgnoreLisencingRestrictions),
+    pi("AllowFontsSubstitution", gs_param_type_bool, AllowFontsSubstitution),
 
 #undef pi
     gs_param_item_end
